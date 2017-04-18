@@ -6,7 +6,7 @@ class CSVReader {
     this.reader = new Readlines(filename);
     if (headers === true) {
       const headerLine = this.getNextLine();
-      this.headers = headerLine.split(',');
+      this.headers = csvParse(headerLine)[0];
     } else {
       this.headers = headers;
     }
