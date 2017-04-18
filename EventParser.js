@@ -1,35 +1,16 @@
-const csvParse = require('csv-parse/lib/sync');
-const Readlines = require('n-readlines');
+const CSVReader = require('./CSVReader');
 
 class EventParser {
   constructor(filename, headers = true) {
-    this.reader = new Readlines(filename);
-
-    if (headers === true) {
-      const headerLine = this.getNextLine();
-      this.headers = headerLine.split(',');
-    } else {
-      this.headers = headers;
-    }
-  }
-
-  getNextLine() {
-    const nextLine = this.reader.next();
-    if (nextLine) {
-      return nextLine.toString('ascii');
-    }
-    return false;
+    this.reader = new CSVReader(filename, headers);
   }
 
   getNextEvent() {
-    const nextLine = this.getNextLine();
-    if (nextLine === false) {
+    const nextObject = this.reader.getNextObject();
+    if (nextObject === false) {
       return false;
     }
-    return this.parseEvent(csvParse(nextLine, {
-      auto_parse: true,
-      columns: this.headers
-    })[0]);
+    return this.parseEvent(nextObject);
   }
 
   parseEvent(eventData) {
