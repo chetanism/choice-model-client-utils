@@ -30,6 +30,17 @@ class RequestManager extends EventEmitter {
     this.openRequestCount++;
   };
 
+  createNextGetRequest(url) {
+    request(url)
+      .then((resp) => {
+        this.requestSucceeded(url, resp);
+      })
+      .catch((err) => {
+        this.requestFailed(url, err);
+      });
+    this.openRequestCount++;
+  }
+
   requestCompleted() {
     this.openRequestCount--;
     this.emit('completed', this.openRequestCount)
