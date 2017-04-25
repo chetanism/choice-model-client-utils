@@ -30,14 +30,14 @@ class RequestManager extends EventEmitter {
     this.openRequestCount++;
   };
 
-  createNextGetRequest(url) {
+  createNextGetRequest(data) {
     request({
-      url: url,
+      url: data.url,
       json: true
     }).then((resp) => {
-      this.requestSucceeded(url, resp);
+      this.requestSucceeded(data, resp);
     }).catch((err) => {
-      this.requestFailed(url, err);
+      this.requestFailed(data, err);
     });
     this.openRequestCount++;
   }
