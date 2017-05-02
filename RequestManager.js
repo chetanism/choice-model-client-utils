@@ -11,11 +11,14 @@ class RequestManager extends EventEmitter {
     this.requestSucceeded = this.requestSucceeded.bind(this);
     this.requestFailed = this.requestFailed.bind(this);
     this.logErrors = logErrors;
+    this.completedCount = 0;
+    this.initialTimestamp = Date.now();
+    this.rps = 0;
   }
 
   printStatus() {
     console.log(
-      `ErrorCount: ${this.errorCount} | successCount: ${this.successCount} | openRequests: ${this.openRequestCount}`
+      `ErrorCount: ${this.errorCount} | successCount: ${this.successCount} | openRequests: ${this.openRequestCount} | RPS: ${this.rps}`
     );
   }
 
@@ -43,7 +46,9 @@ class RequestManager extends EventEmitter {
   }
 
   requestCompleted() {
+    this.completedCount++;
     this.openRequestCount--;
+    this.rps = (this.completedCount * 1000) / (Date.now() - this.initialTimestamp);
     this.emit('completed', this.openRequestCount)
   }
 
